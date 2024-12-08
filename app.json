@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "blog-4-ai-videos",
-    "slug": "blog-4-ai-videos",
+    "name": "AIr",
+    "slug": "air",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "air",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
