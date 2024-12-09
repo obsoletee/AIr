@@ -8,6 +8,7 @@ import StartButton from '@/components/startButton';
 import { Link, router } from 'expo-router';
 
 import { createUser } from '../../lib/appwrite';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 interface Form {
   username: string;
@@ -22,6 +23,7 @@ const SignUp = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const submit = async () => {
     if (!form.email || !form.username || !form.password) {
       Alert.alert('Error', 'Please fill in all the fields');
@@ -34,6 +36,8 @@ const SignUp = () => {
           form.password,
           form.username,
         );
+        setUser(result);
+        setIsLoggedIn(true);
         router.replace('/home');
       } catch (error: any) {
         Alert.alert('Error', error.message);
