@@ -22,16 +22,20 @@ const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
-export const signIn = async (email, password) => {
+export const signIn = async (email: string, password: string) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     throw new Error(error);
   }
 };
 
-export const createUser = async (email, password, username) => {
+export const createUser = async (
+  email: string,
+  password: string,
+  username: string,
+) => {
   try {
     const newAccount = await account.create(
       ID.unique(),
@@ -54,7 +58,7 @@ export const createUser = async (email, password, username) => {
     );
 
     return newUser;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     throw new Error(error);
   }
