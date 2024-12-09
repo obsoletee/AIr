@@ -6,7 +6,8 @@ import { images } from '../../constants/images';
 import FormField from '@/components/formField';
 import StartButton from '@/components/startButton';
 import { Link, router } from 'expo-router';
-import { signIn } from '@/lib/appwrite';
+import { getCurrentUser, signIn } from '@/lib/appwrite';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 interface Form {
   email: string;
@@ -20,6 +21,7 @@ const SignIn = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const submit = async () => {
     if (!form.email || !form.password) {
       Alert.alert('Error', 'Please fill in all the fields');
@@ -28,6 +30,9 @@ const SignIn = () => {
 
       try {
         await signIn(form.email, form.password);
+        const result = await getCurrentUser();
+        setUser(result);
+        setIsLoggedIn(true);
         router.replace('/home');
       } catch (error: any) {
         Alert.alert('Error', error.message);

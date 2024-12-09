@@ -1,10 +1,17 @@
-import { Account, Avatars, Client, Databases, ID } from 'react-native-appwrite';
+import {
+  Account,
+  Avatars,
+  Client,
+  Databases,
+  ID,
+  Query,
+} from 'react-native-appwrite';
 
 export const config = {
   endpoint: 'https://clowd.appwrite.io/v1',
   platform: 'com.akira.air',
   projectId: '6757092b001311371d25',
-  databseId: '67570ae2001ff9949c35',
+  databaseId: '67570ae2001ff9949c35',
   userCollectionId: '67570b090020acf86484',
   videoCollectionId: '67570b3100277749b55a',
   storageId: '67570cfe000d21f783e5',
@@ -47,7 +54,7 @@ export const createUser = async (
     const avatarUrl = avatars.getInitials(username);
     await signIn(email, password);
     const newUser = await databases.createDocument(
-      config.databseId,
+      config.databaseId,
       config.userCollectionId,
       ID.unique(),
       { accountId: newAccount.$id, email, username, avatar: avatarUrl },
@@ -56,6 +63,26 @@ export const createUser = async (
     return newUser;
   } catch (error: any) {
     console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const getCurrentUser = async (): Promise<any> => {
+  try {
+    const currentAccount = await account.get();
+
+    if (!currentAccount) {
+      throw new Error('Current account not found');
+    }
+
+    const currentUser = await databases.listDocuments(
+      config.databaseId,
+      config.userCollectionId,
+      [Query.equal('accountId', currentAccount.$id)],
+    );
+
+    return currentUser.documents[0];
+  } catch (error: any) {
     throw new Error(error);
   }
 };
