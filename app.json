@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.akira.air"
     },
     "web": {
       "bundler": "metro",

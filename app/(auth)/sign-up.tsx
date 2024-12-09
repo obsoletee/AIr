@@ -1,21 +1,43 @@
-import { View, Image, Text, ScrollView } from 'react-native';
+import { View, Image, Text, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { images } from '../../constants/images';
 import FormField from '@/components/formField';
 import StartButton from '@/components/startButton';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
+import { createUser } from '../../lib/appwrite';
+
+interface Form {
+  username: string;
+  email: string;
+  password: string;
+}
 const SignUp = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Form>({
     username: '',
     email: '',
     password: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submit = () => {};
+  const submit = async () => {
+    if (!form.email || !form.username || !form.password) {
+      Alert.alert('Error', 'Please fill in all the fields');
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+      router.replace('/home');
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -55,7 +77,7 @@ const SignUp = () => {
           <FormField
             title="Username"
             placeholder="Username"
-            value={form.email}
+            value={form.username}
             handleChangeText={(e: string) => setForm({ ...form, username: e })}
             additionalStyles={{ marginTop: 28 }}
             keyboardType="default"
@@ -77,7 +99,7 @@ const SignUp = () => {
             keyboardType="default"
           />
           <StartButton
-            title="Sign In"
+            title="Sign Up"
             handlePress={submit}
             containerStyles={{ marginTop: 28, backgroundColor: 'pink' }}
             isLoading={isSubmitting}
