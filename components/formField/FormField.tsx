@@ -39,6 +39,7 @@ export const FormField = ({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'center',
           borderWidth: 2,
           borderColor: isFocused ? '#FF8E01' : '#232533',
           borderRadius: 16,
