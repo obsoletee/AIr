@@ -1,8 +1,17 @@
-import { View, Text, FlatList } from 'react-native';
-import React from 'react';
+import { FlatList, ViewToken } from 'react-native';
+import React, { useState } from 'react';
+import TrendingItem from './item';
 
-interface Post {
-  $id: string;
+export interface Post {
+  id: string;
+  title: string;
+  thumbnail: string;
+  video: string;
+  creator: {
+    avatar: string;
+    username: string;
+  };
+  createdAt: string;
 }
 
 interface TrendingSectionProps {
@@ -10,14 +19,31 @@ interface TrendingSectionProps {
 }
 
 export const TrendingSection = ({ posts }: TrendingSectionProps) => {
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+
+  const viewableItemsChanged = ({
+    viewableItems,
+  }: {
+    viewableItems: Array<ViewToken & { item: Post }>;
+  }) => {
+    if (viewableItems.length > 0) {
+      setActiveItem(viewableItems[0].item.id);
+    }
+  };
+
   return (
     <FlatList
       data={posts}
-      keyExtractor={(item) => item.$id}
+      keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
-        <Text style={{ color: 'white' }}>{item.$id}</Text>
+        <TrendingItem activeItem={activeItem} item={item} />
       )}
       horizontal
+      onViewableItemsChanged={viewableItemsChanged}
+      viewabilityConfig={{
+        itemVisiblePercentThreshold: 70,
+      }}
+      contentOffset={{ x: 170, y: 0 }}
     />
   );
 };
