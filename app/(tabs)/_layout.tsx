@@ -11,12 +11,20 @@ interface TabIconProps {
 }
 const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
   return (
-    <View className="flex-1 items-center justify-start gap-1">
+    <View
+      style={{
+        display: 'flex',
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: 1,
+      }}
+    >
       <Image
         source={icon}
         resizeMode="contain"
         tintColor={color}
-        className="w-5 h-5"
+        style={{ width: 18, height: 18 }}
       />
       <Text
         className={`${
@@ -39,7 +47,7 @@ const TabsLayout = () => {
           tabBarInactiveTintColor: '#CDCDE0',
           tabBarStyle: {
             backgroundColor: '#161622',
-            borderTopWidth: 1,
+            borderTopWidth: 0,
             borderTopColor: '#232533',
             height: 50,
           },
