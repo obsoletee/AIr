@@ -5,9 +5,10 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import * as Animatable from 'react-native-animatable';
 import { icons } from '@/constants/icons';
+import { ResizeMode, Video } from 'expo-av';
 
 export interface Post {
   id: string;
@@ -26,30 +27,56 @@ interface TrendingItemProps {
   item: Post;
 }
 
-const createAnimation = (fromScale: number, toScale: number) => ({
-  0: { transform: [{ scale: fromScale }] },
-  1: { transform: [{ scale: toScale }] },
-});
-
-const zoomIn = createAnimation(0.9, 1.05);
-const zoomOut = createAnimation(1.05, 0.9);
-
 export const TrendingItem = ({ activeItem, item }: TrendingItemProps) => {
-  const [isPlay, setIsPlay] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const createAnimation = (fromScale: number, toScale: number) => ({
+    0: { transform: [{ scale: fromScale }] },
+    1: { transform: [{ scale: toScale }] },
+  });
+
+  const zoomIn = createAnimation(0.9, 1.05);
+  const zoomOut = createAnimation(1.05, 0.9);
+
+  const animation = useMemo(
+    () => (activeItem === item.id ? zoomIn : zoomOut),
+    [activeItem, item.id],
+  );
 
   return (
     <Animatable.View
       style={{ marginRight: 20 }}
-      animation={activeItem === item.id ? zoomIn : zoomOut}
+      animation={animation}
       duration={500}
     >
-      {isPlay ? (
-        <Text>Playing</Text>
+      {isPlaying ? (
+        <Video
+          source={{ uri: item.video }}
+          resizeMode={ResizeMode.CONTAIN}
+          shouldPlay
+          useNativeControls
+          onPlaybackStatusUpdate={(status) => {
+            if (
+              status.isLoaded &&
+              !status.isPlaying &&
+              status.positionMillis === status.durationMillis
+            ) {
+              setIsPlaying(false);
+            }
+          }}
+          style={{
+            width: 208,
+            height: 288,
+            borderRadius: 35,
+            marginTop: 12,
+            backgroundColor: '#CDCDE0',
+          }}
+        />
       ) : (
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() => {
-            setIsPlay(true);
+            setIsPlaying(true);
           }}
           style={{
             display: 'flex',

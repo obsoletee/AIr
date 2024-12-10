@@ -8,7 +8,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { images } from '@/constants/images';
 import SearchInput from '@/components/searchInput';
 import TrendingSection from '@/components/trendingSection';
@@ -33,15 +33,24 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const { data: posts, refetch } = useAppwite({ fn: getAllPosts });
-  const { data: latestPosts } = useAppwite({
+  const { data: latestPosts, refetch: latestPostsRefetch } = useAppwite({
     fn: getLatestPosts,
   });
+
+  const memoizedLatestPosts = useMemo(() => latestPosts, [latestPosts]);
 
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
-    queueMicrotask(() => setRefreshing(false));
+    await latestPostsRefetch();
+    setRefreshing(false);
   };
+
+  useEffect(() => {
+    if (latestPosts && latestPosts.length > 0) {
+      setRefreshing(false);
+    }
+  }, [latestPosts]);
 
   return (
     <SafeAreaView
@@ -129,11 +138,7 @@ const Home = () => {
                   >
                     Latest Videos
                   </Text>
-                  {refreshing ? (
-                    <ActivityIndicator size="large" color="#FF8E01" />
-                  ) : (
-                    <TrendingSection posts={latestPosts ?? []} />
-                  )}
+                  <TrendingSection posts={memoizedLatestPosts ?? []} />
                 </View>
               </View>
             );
