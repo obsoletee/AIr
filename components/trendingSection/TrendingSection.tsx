@@ -1,5 +1,5 @@
 import { FlatList, ViewToken } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import TrendingItem from './item';
 
 export interface Post {
@@ -21,15 +21,18 @@ interface TrendingSectionProps {
 export const TrendingSection = ({ posts }: TrendingSectionProps) => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
 
-  const viewableItemsChanged = ({
-    viewableItems,
-  }: {
-    viewableItems: Array<ViewToken & { item: Post }>;
-  }) => {
-    if (viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].item.id);
-    }
-  };
+  const viewableItemsChanged = useCallback(
+    ({
+      viewableItems,
+    }: {
+      viewableItems: Array<ViewToken & { item: Post }>;
+    }) => {
+      if (viewableItems.length > 0 && viewableItems[0].item.id !== activeItem) {
+        setActiveItem(viewableItems[0].item.id);
+      }
+    },
+    [activeItem],
+  );
 
   return (
     <FlatList
