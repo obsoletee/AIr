@@ -1,19 +1,22 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
-import { Models } from 'react-native-appwrite';
 import { icons } from '@/constants/icons';
 
-interface VideoCardProps {
-  data: Models.Document;
+export interface Post {
+  id: string;
+  title: string;
+  thumbnail: string;
+  video: string;
+  creator: {
+    avatar: string;
+    username: string;
+  };
+  createdAt: string;
 }
-export const VideoCard = ({
-  data: {
-    title,
-    video,
-    thumbnail,
-    users: { username, avatar },
-  },
-}: VideoCardProps) => {
+interface VideoCardProps {
+  data: Post;
+}
+export const VideoCard = ({ data }: VideoCardProps) => {
   const [isPlay, setIsPlay] = useState(false);
   return (
     <View
@@ -58,7 +61,7 @@ export const VideoCard = ({
             }}
           >
             <Image
-              source={{ uri: avatar }}
+              source={{ uri: data.creator.avatar }}
               style={{ width: '100%', height: '100%', borderRadius: 8 }}
               resizeMode="contain"
             />
@@ -81,7 +84,7 @@ export const VideoCard = ({
               }}
               numberOfLines={1}
             >
-              {title}
+              {data.title}
             </Text>
             <Text
               style={{
@@ -92,7 +95,7 @@ export const VideoCard = ({
               }}
               numberOfLines={1}
             >
-              {username}
+              {data.creator.username}
             </Text>
           </View>
         </View>
@@ -121,7 +124,7 @@ export const VideoCard = ({
           }}
         >
           <Image
-            source={{ uri: thumbnail }}
+            source={{ uri: data.thumbnail }}
             style={{ width: '100%', height: '100%', borderRadius: 8 }}
             resizeMode="cover"
           />

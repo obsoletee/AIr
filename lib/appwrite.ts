@@ -34,6 +34,18 @@ const account = new Account(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
+export interface Post {
+  id: string;
+  title: string;
+  thumbnail: string;
+  video: string;
+  creator: {
+    avatar: string;
+    username: string;
+  };
+  createdAt: string;
+}
+
 export const signIn = async (email: string, password: string) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
@@ -96,21 +108,53 @@ export const getCurrentUser = async (): Promise<any> => {
   }
 };
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (): Promise<Post[]> => {
   try {
-    const posts = await databases.listDocuments(databaseId, videoCollectionId);
-    return posts.documents;
+    const response = await databases.listDocuments(
+      databaseId,
+      videoCollectionId,
+    );
+
+    const posts: Post[] = response.documents.map((doc) => ({
+      id: doc.$id,
+      title: doc.title,
+      thumbnail: doc.thumbnail,
+      video: doc.video,
+      creator: {
+        avatar: doc.users.avatar,
+        username: doc.users.username,
+      },
+      createdAt: doc.$createdAt,
+    }));
+
+    return posts;
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error.message || 'Failed to fetch posts');
   }
 };
 
+const query = [Query.orderDesc('$createdAt'), Query.limit(7)];
+
 export const getLatestPosts = async () => {
   try {
-    const posts = await databases.listDocuments(databaseId, videoCollectionId, [
-      Query.orderDesc('$createdAt', Query.limit(7)),
-    ]);
-    return posts.documents;
+    const response = await databases.listDocuments(
+      databaseId,
+      videoCollectionId,
+      query,
+    );
+    const posts: Post[] = response.documents.map((doc) => ({
+      id: doc.$id,
+      title: doc.title,
+      thumbnail: doc.thumbnail,
+      video: doc.video,
+      creator: {
+        avatar: doc.users.avatar,
+        username: doc.users.username,
+      },
+      createdAt: doc.$createdAt,
+    }));
+
+    return posts;
   } catch (error: any) {
     throw new Error(error);
   }
