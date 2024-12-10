@@ -6,7 +6,7 @@ interface FormFieldProps {
   title: string;
   value: string;
   handleChangeText: (e: string) => void;
-  additionalStyles: {};
+  additionalStyles?: {};
   keyboardType: 'email-address' | 'default';
   placeholder: string;
 }
