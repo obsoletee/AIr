@@ -16,7 +16,7 @@ const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
       style={{
         display: 'flex',
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-around',
         alignItems: 'center',
         gap: 1,
       }}
@@ -28,16 +28,20 @@ const TabIcon = ({ icon, color, name, focused }: TabIconProps) => {
         style={{ width: 18, height: 18 }}
       />
       <Text
-        className={`${
-          focused ? 'font-psemibold' : 'font-pregular'
-        } text-xs w-full`}
-        style={{ color: color }}
+        style={{
+          color: 'white',
+          fontFamily: focused ? 'Poppins-Medium' : 'Poppins-Regular',
+          fontSize: 12,
+          lineHeight: 16,
+          width: '100%',
+        }}
       >
         {name}
       </Text>
     </View>
   );
 };
+
 const TabsLayout = () => {
   return (
     <>
@@ -50,7 +54,7 @@ const TabsLayout = () => {
             backgroundColor: '#161622',
             borderTopWidth: 0,
             borderTopColor: '#232533',
-            height: 50,
+            height: 48,
           },
         }}
       >
