@@ -5,8 +5,6 @@ import { useFonts } from 'expo-font';
 
 import { GlobalProvider } from '@/context/GlobalProvider';
 
-import '../global.css';
-
 SplashScreen.preventAutoHideAsync();
 
 const _layout = () => {
