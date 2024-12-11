@@ -1,5 +1,6 @@
+import { useCallback, useState } from 'react';
 import { FlatList, ViewToken } from 'react-native';
-import React, { useCallback, useState } from 'react';
+
 import TrendingItem from './item';
 
 export interface Post {

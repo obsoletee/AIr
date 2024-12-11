@@ -1,4 +1,3 @@
-import { getCurrentUser } from '@/lib/appwrite';
 import {
   createContext,
   useContext,
@@ -6,6 +5,8 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
+
+import { getCurrentUser } from '@/lib/appwrite';
 
 interface GlobalProviderProps {
   children: ReactNode;

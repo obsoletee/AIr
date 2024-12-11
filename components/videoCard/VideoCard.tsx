@@ -1,7 +1,8 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
-import { icons } from '@/constants/icons';
 import { ResizeMode, Video } from 'expo-av';
+import { useState } from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+
+import { icons } from '@/constants/icons';
 
 export interface Post {
   id: string;

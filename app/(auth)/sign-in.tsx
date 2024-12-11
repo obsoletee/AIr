@@ -1,13 +1,13 @@
+import { Link, router } from 'expo-router';
+import { useState } from 'react';
 import { View, Image, Text, ScrollView, Alert } from 'react-native';
-import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { images } from '../../constants/images';
 import FormField from '@/components/formField';
 import StartButton from '@/components/startButton';
-import { Link, router } from 'expo-router';
-import { getCurrentUser, signIn } from '@/lib/appwrite';
+import { images } from '../../constants/images';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { getCurrentUser, signIn } from '@/lib/appwrite';
 
 interface Form {
   email: string;

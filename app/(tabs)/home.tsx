@@ -1,21 +1,21 @@
+import { useEffect, useMemo, useState } from 'react';
 import {
-  View,
-  Text,
-  SafeAreaView,
+  ActivityIndicator,
   FlatList,
   Image,
   RefreshControl,
-  Alert,
-  ActivityIndicator,
+  SafeAreaView,
+  Text,
+  View,
 } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
-import { images } from '@/constants/images';
+
+import Empty from '@/components/empty';
 import SearchInput from '@/components/searchInput';
 import TrendingSection from '@/components/trendingSection';
-import Empty from '@/components/empty';
+import VideoCard from '@/components/videoCard';
+import { images } from '@/constants/images';
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
 import { useAppwite } from '@/hooks/useAppwite';
-import VideoCard from '@/components/videoCard';
 
 export interface Post {
   id: string;

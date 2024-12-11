@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { Text, View } from 'react-native';
-import React, { useEffect } from 'react';
 import { SplashScreen, Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+
+import { GlobalProvider } from '@/context/GlobalProvider';
 
 import '../global.css';
-import { useFonts } from 'expo-font';
-import { GlobalProvider } from '@/context/GlobalProvider';
 
 SplashScreen.preventAutoHideAsync();
 

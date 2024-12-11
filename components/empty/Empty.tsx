@@ -1,8 +1,8 @@
+import { router } from 'expo-router';
 import { View, Text, Image } from 'react-native';
-import React from 'react';
+
 import { images } from '@/constants/images';
 import StartButton from '../startButton';
-import { router } from 'expo-router';
 
 interface EmptyProps {
   title: string;
