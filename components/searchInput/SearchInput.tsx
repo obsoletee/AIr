@@ -1,5 +1,6 @@
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { View, Image, TextInput, TouchableOpacity } from 'react-native';
+
 import { icons } from '@/constants/icons';
 
 interface SearchInputProps {

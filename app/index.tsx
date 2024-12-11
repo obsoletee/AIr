@@ -1,18 +1,10 @@
-import {
-  Dimensions,
-  Image,
-  ScrollView,
-  StatusBar,
-  Text,
-  View,
-} from 'react-native';
-import React from 'react';
+import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { images } from '../constants/images';
-import StartButton from '@/components/startButton/';
 import { Redirect, router } from 'expo-router';
+
+import StartButton from '@/components/startButton/';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { images } from '../constants/images';
 
 const App = () => {
   const { isLoggedIn, isLoading } = useGlobalContext();

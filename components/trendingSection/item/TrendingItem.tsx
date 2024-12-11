@@ -1,14 +1,9 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ImageBackground,
-} from 'react-native';
-import React, { useMemo, useState } from 'react';
-import * as Animatable from 'react-native-animatable';
-import { icons } from '@/constants/icons';
 import { ResizeMode, Video } from 'expo-av';
+import { useMemo, useState } from 'react';
+import { View, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+
+import { icons } from '@/constants/icons';
 
 export interface Post {
   id: string;
