@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import { View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 
 import { icons } from '@/constants/icons';
+import { router, usePathname } from 'expo-router';
 
 interface SearchInputProps {
-  value: string;
-  handleChangeText: (e: string) => void;
   additionalStyles?: {};
+  initialQuery?: string;
 }
 export const SearchInput = ({
-  value,
-  handleChangeText,
   additionalStyles,
+  initialQuery,
 }: SearchInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
+  const pathname = usePathname();
+  const [query, setQuery] = useState(initialQuery || '');
 
   return (
     <View
@@ -29,13 +30,14 @@ export const SearchInput = ({
         paddingHorizontal: 16,
         backgroundColor: '#1E1E2D',
         marginTop: 8,
+        ...additionalStyles,
       }}
     >
       <TextInput
         placeholder="Search for a video topic"
         placeholderTextColor="#7b7b8b"
-        value={value}
-        onChangeText={handleChangeText}
+        value={query}
+        onChangeText={(e) => setQuery(e)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         style={{
@@ -47,7 +49,21 @@ export const SearchInput = ({
           fontFamily: 'Poppins-Regular',
         }}
       />
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (!query) {
+            return Alert.alert(
+              'Missing query',
+              'Please input something to search results across database',
+            );
+          }
+          if (pathname.startsWith('/search')) {
+            router.setParams({ query });
+          } else {
+            router.push(`/search/${query}`);
+          }
+        }}
+      >
         <Image
           source={icons.search}
           resizeMode="contain"
