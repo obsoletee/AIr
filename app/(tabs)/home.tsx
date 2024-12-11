@@ -119,7 +119,7 @@ const Home = () => {
                     />
                   </View>
                 </View>
-                <SearchInput handleChangeText={() => {}} value="" />
+                <SearchInput />
                 <View
                   style={{
                     width: '100%',

@@ -133,14 +133,38 @@ export const getAllPosts = async (): Promise<Post[]> => {
   }
 };
 
-const query = [Query.orderDesc('$createdAt'), Query.limit(7)];
-
 export const getLatestPosts = async () => {
   try {
+    const query = [Query.orderDesc('$createdAt'), Query.limit(7)];
     const response = await databases.listDocuments(
       databaseId,
       videoCollectionId,
       query,
+    );
+    const posts: Post[] = response.documents.map((doc) => ({
+      id: doc.$id,
+      title: doc.title,
+      thumbnail: doc.thumbnail,
+      video: doc.video,
+      creator: {
+        avatar: doc.users.avatar,
+        username: doc.users.username,
+      },
+      createdAt: doc.$createdAt,
+    }));
+
+    return posts;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const searchPosts = async (query: string) => {
+  try {
+    const response = await databases.listDocuments(
+      databaseId,
+      videoCollectionId,
+      [Query.search('title', query)],
     );
     const posts: Post[] = response.documents.map((doc) => ({
       id: doc.$id,
