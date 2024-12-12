@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 
 interface StartButtonProps {
   title: string;
@@ -14,20 +14,17 @@ export const StartButton = ({
   textStyles,
   isLoading,
 }: StartButtonProps) => {
+  const dynamicButtonStyle = {
+    ...styles.buttonWrapper,
+    opacity: isLoading ? 0.5 : 1,
+    ...containerStyles,
+  };
+
   return (
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
-      style={{
-        backgroundColor: '#FF9C01',
-        borderRadius: 12,
-        minHeight: 62,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...containerStyles,
-        opacity: isLoading ? 0.5 : 1,
-      }}
+      style={dynamicButtonStyle}
       disabled={isLoading}
     >
       <Text
@@ -44,3 +41,18 @@ export const StartButton = ({
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  buttonWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FF9C01',
+    borderRadius: 12,
+    minHeight: 62,
+    ...Platform.select({
+      web: { width: '20%' },
+      default: { width: 'auto' },
+    }),
+  },
+});

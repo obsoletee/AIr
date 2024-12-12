@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Platform,
   RefreshControl,
   SafeAreaView,
   Text,
@@ -16,6 +17,7 @@ import VideoCard from '@/components/videoCard';
 import { images } from '@/constants/images';
 import { getAllPosts, getLatestPosts } from '@/lib/appwrite';
 import { useAppwite } from '@/hooks/useAppwite';
+import HomepageHeader from '@/components/homepageHeader/HomepageHeader';
 
 export interface Post {
   id: string;
@@ -31,6 +33,9 @@ export interface Post {
 
 const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const [numberOfColumns, setNumberOfColumns] = useState(
+    Platform.OS === 'web' ? 3 : 1,
+  );
 
   const { data: posts, refetch } = useAppwite({ fn: getAllPosts });
   const { data: latestPosts, refetch: latestPostsRefetch } = useAppwite({
@@ -75,73 +80,11 @@ const Home = () => {
       ) : (
         <FlatList
           data={posts}
+          key={numberOfColumns}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <VideoCard data={item} />}
           ListHeaderComponent={() => {
-            return (
-              <View style={{ marginTop: 24, paddingHorizontal: 16 }}>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flex: 1,
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    marginBottom: 24,
-                  }}
-                >
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: 'Poppins-Medium',
-                        fontSize: 14,
-                        lineHeight: 20,
-                        color: '#CDCDE0',
-                      }}
-                    >
-                      Welcome back
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: 'Poppins-Bold',
-                        fontSize: 24,
-                        lineHeight: 32,
-                        color: 'white',
-                      }}
-                    >
-                      User
-                    </Text>
-                  </View>
-                  <View style={{ marginTop: 6 }}>
-                    <Image
-                      source={images.logoSmall}
-                      style={{ width: 36, height: 40, resizeMode: 'contain' }}
-                    />
-                  </View>
-                </View>
-                <SearchInput />
-                <View
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    flex: 1,
-                    paddingBottom: 16,
-                    paddingTop: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: '#CDCDE0',
-                      fontFamily: 'Poppins-Regular',
-                      marginBottom: 12,
-                    }}
-                  >
-                    Latest Videos
-                  </Text>
-                  <TrendingSection posts={memoizedLatestPosts ?? []} />
-                </View>
-              </View>
-            );
+            return <HomepageHeader memoizedLatestPosts={memoizedLatestPosts} />;
           }}
           ListEmptyComponent={() => (
             <Empty
@@ -152,6 +95,7 @@ const Home = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          numColumns={numberOfColumns}
         />
       )}
     </SafeAreaView>

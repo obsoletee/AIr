@@ -1,9 +1,17 @@
 import { ResizeMode, Video } from 'expo-av';
 import { useMemo, useState } from 'react';
-import { View, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
 import { icons } from '@/constants/icons';
+import React from 'react';
 
 export interface Post {
   id: string;
@@ -40,8 +48,8 @@ export const TrendingItem = ({ activeItem, item }: TrendingItemProps) => {
 
   return (
     <Animatable.View
-      style={{ marginRight: 20 }}
-      animation={animation}
+      style={styles.animatableContainer}
+      animation={Platform.OS === 'web' ? undefined : animation}
       duration={500}
     >
       {isPlaying ? (
@@ -59,13 +67,7 @@ export const TrendingItem = ({ activeItem, item }: TrendingItemProps) => {
               setIsPlaying(false);
             }
           }}
-          style={{
-            width: 208,
-            height: 288,
-            borderRadius: 35,
-            marginTop: 12,
-            backgroundColor: '#CDCDE0',
-          }}
+          style={styles.videoPlayer}
         />
       ) : (
         <TouchableOpacity
@@ -73,46 +75,74 @@ export const TrendingItem = ({ activeItem, item }: TrendingItemProps) => {
           onPress={() => {
             setIsPlaying(true);
           }}
-          style={{
-            display: 'flex',
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative',
-          }}
+          style={styles.thumbnailContainer}
         >
           <ImageBackground
             source={{ uri: item.thumbnail }}
-            style={{
-              width: 208,
-              height: 288,
-              borderRadius: 35,
-              overflow: 'hidden',
-              marginTop: 20,
-              marginBottom: 20,
-              boxShadow: '0 10px 15px -3px, 0 4px 6px -4px',
-            }}
+            style={styles.thumbnailImage}
             resizeMode="cover"
           />
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Image
-              source={icons.play}
-              style={{ width: 48, height: 48 }}
-              resizeMode="contain"
-            />
-          </View>
+          {Platform.OS === 'web' ? (
+            <></>
+          ) : (
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Image
+                source={icons.play}
+                style={{ width: 48, height: 48 }}
+                resizeMode="contain"
+              />
+            </View>
+          )}
         </TouchableOpacity>
       )}
     </Animatable.View>
   );
 };
+
+const styles = StyleSheet.create({
+  animatableContainer: {
+    marginRight: 20,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderRadius: 35,
+  },
+  videoPlayer: {
+    borderRadius: 35,
+    marginTop: 12,
+    backgroundColor: '#CDCDE0',
+    ...Platform.select({
+      web: { width: 355, height: 440 },
+      default: { width: 208, height: 288 },
+    }),
+  },
+  thumbnailContainer: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  thumbnailImage: {
+    borderRadius: 35,
+    overflow: 'hidden',
+    marginTop: 20,
+    marginBottom: 20,
+    boxShadow: '0 10px 15px -3px, 0 4px 6px -4px',
+    ...Platform.select({
+      web: { width: 355, height: 440 },
+      default: { width: 208, height: 288 },
+    }),
+  },
+});
