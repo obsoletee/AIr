@@ -183,3 +183,17 @@ export const searchPosts = async (query: string) => {
     throw new Error(error);
   }
 };
+
+export const deleteCurrentSession = async (): Promise<any> => {
+  try {
+    const currentAccount = await account.get();
+
+    if (!currentAccount) {
+      throw new Error('Current account not found');
+    }
+
+    account.deleteSessions();
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};

@@ -1,6 +1,6 @@
 import { Link, router } from 'expo-router';
 import { useState } from 'react';
-import { View, Image, Text, ScrollView, Alert } from 'react-native';
+import { View, Image, Text, ScrollView, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import FormField from '@/components/formField';
@@ -25,7 +25,16 @@ const SignUp = () => {
   const { setUser, setIsLoggedIn } = useGlobalContext();
   const submit = async () => {
     if (!form.email || !form.username || !form.password) {
-      Alert.alert('Error', 'Please fill in all the fields');
+      Platform.OS === 'web'
+        ? alert('Please fill in all the fields')
+        : Alert.alert('Error', 'Please fill in all the fields');
+    } else if (form.password.length < 8) {
+      Platform.OS === 'web'
+        ? alert('Password is too short. Minimum length is 8 symbols')
+        : Alert.alert(
+            'Error',
+            'Password is too short. Minimum length is 8 symbols',
+          );
     } else {
       setIsSubmitting(true);
 

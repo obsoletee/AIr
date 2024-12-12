@@ -1,4 +1,11 @@
-import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+  Platform,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
 
@@ -70,7 +77,9 @@ const App = () => {
               textAlign: 'center',
             }}
           >
-            Where creativity meets innovation: embark on a journey of limitless
+            {Platform.OS === 'web'
+              ? 'The most innovative shop in entire world'
+              : 'Where creativity meets innovation: embark on a journey of limitless'}
             exploration with AIr
           </Text>
 

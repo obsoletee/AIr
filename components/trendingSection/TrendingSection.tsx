@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { FlatList, ViewToken } from 'react-native';
+import { useRef, useState } from 'react';
+import { FlatList, Platform, ViewToken } from 'react-native';
 
 import TrendingItem from './item';
 
@@ -22,28 +22,30 @@ interface TrendingSectionProps {
 export const TrendingSection = ({ posts }: TrendingSectionProps) => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
 
-  const viewableItemsChanged = useCallback(
+  const viewabilityCallback = useRef(
     ({
       viewableItems,
     }: {
       viewableItems: Array<ViewToken & { item: Post }>;
     }) => {
-      if (viewableItems.length > 0 && viewableItems[0].item.id !== activeItem) {
-        setActiveItem(viewableItems[0].item.id);
+      if (viewableItems.length > 0) {
+        const newActiveItem = viewableItems[0].item.id;
+        if (newActiveItem !== activeItem) {
+          setActiveItem(newActiveItem);
+        }
       }
     },
-    [activeItem],
   );
 
   return (
     <FlatList
-      data={posts}
+      data={Platform.OS === 'web' ? posts.slice(0, 5) : posts}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <TrendingItem activeItem={activeItem} item={item} />
       )}
       horizontal
-      onViewableItemsChanged={viewableItemsChanged}
+      onViewableItemsChanged={viewabilityCallback.current}
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}

@@ -1,5 +1,5 @@
-import { View, Text, SafeAreaView, FlatList } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import { View, Text, SafeAreaView, FlatList, Platform } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import Empty from '@/components/empty';
 import SearchInput from '@/components/searchInput';
@@ -8,6 +8,9 @@ import { useAppwite } from '@/hooks/useAppwite';
 import { searchPosts } from '@/lib/appwrite';
 
 const Search = () => {
+  const [numberOfColumns, setNumberOfColumns] = useState(
+    Platform.OS === 'web' ? 3 : 1,
+  );
   const response = useLocalSearchParams();
   const query = Array.isArray(response.query)
     ? response.query[0]
@@ -29,6 +32,8 @@ const Search = () => {
       }}
     >
       <FlatList
+        key={numberOfColumns}
+        numColumns={numberOfColumns}
         data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <VideoCard data={item} />}
